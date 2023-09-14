@@ -1,5 +1,3 @@
-# apostila-laravel
-
 # Apostila de Desenvolvimento Web com Laravel para disciplina de Desenvolvimento Web do 6º semestre do curso de Informática
 
 ##### Descrição:
@@ -12,7 +10,44 @@ Um vez que as aulas são corridas, com pouco e existe muitos imprevistos. A apos
 
 
 1. [Introdução](#introdução)
+	1. [O que é um framework?](#o-que-é-um-framework)
+	2. [O que é o Laravel?](#o-que-é-o-laravel)
+		1. [Vantagens de usar o Laravel](#vantagens-de-usar-o-laravel)
+		2. [Desvantagens de usar o Laravel](#desvantagens-de-usar-o-laravel)
+	3. [O que é o MVC?](#o-que-é-o-mvc)
+	4. [O que é o Composer?](#o-que-é-o-composer)
 2. [Instalação](#instalação)
+	1. [Instalação do Composer](#instalação-do-composer)
+	2. [Instalação do Laravel](#instalação-do-laravel)
+	3. [Instalação do XAMPP](#instalação-do-xampp)
+	4. [Criando um projeto Laravel](#criando-um-projeto-laravel)
+	5. [Estrutura de um projeto Laravel](#estrutura-de-um-projeto-laravel)
+3. [Rotas](#rotas)
+	1. [Rotas nomeadas](#rotas-nomeadas)
+	2. [Rotas anônimas](#rotas-anônimas)
+	3. [Métodos HTTP](#métodos-http)
+4. [Views](#views)
+	1. [Criando uma view](#criando-uma-view)
+	2. [Passando dados para a view](#passando-dados-para-a-view)
+	3. [Exibindo dados na view](#exibindo-dados-na-view)
+	4. [Diretivas](#diretivas)
+		1. [Diretiva @if](#diretiva-if)
+		2. [Diretiva @else](#diretiva-else)
+		3. [Diretiva @elseif](#diretiva-elseif)
+		4. [Diretiva @for](#diretiva-for)
+		5. [Diretiva @foreach](#diretiva-foreach)
+		6. [Diretiva @forelse](#diretiva-forelse)
+		7. [Diretiva @isset](#diretiva-isset)
+		8. [Diretiva @empty](#diretiva-empty)
+		9. [Diretiva @switch](#diretiva-switch)
+		10. [Diretiva @include](#diretiva-include)
+		11. [Diretiva @extends](#diretiva-extends)
+		12. [Diretiva @section](#diretiva-section)
+		13. [Diretiva @yield](#diretiva-yield)
+		14. [Diretiva @auth](#diretiva-auth)
+		15. [Diretiva @guest](#diretiva-guest)
+
+
 
 
 ## Introdução
