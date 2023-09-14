@@ -37,15 +37,22 @@ Um vez que as aulas são corridas, com pouco e existe muitos imprevistos. A apos
 		4. [Diretiva @for](#diretiva-for)
 		5. [Diretiva @foreach](#diretiva-foreach)
 		6. [Diretiva @forelse](#diretiva-forelse)
-		7. [Diretiva @isset](#diretiva-isset)
-		8. [Diretiva @empty](#diretiva-empty)
+		7. [Diretiva @empty](#diretiva-empty)
+		8. [Diretiva @isset](#diretiva-isset)
 		9. [Diretiva @switch](#diretiva-switch)
 		10. [Diretiva @include](#diretiva-include)
-		11. [Diretiva @extends](#diretiva-extends)
-		12. [Diretiva @section](#diretiva-section)
-		13. [Diretiva @yield](#diretiva-yield)
+		11. [Diretiva @yield](#diretiva-yield)
+		12. [Diretiva @extends](#diretiva-extends)
+		13. [Diretiva @section](#diretiva-section)
 		14. [Diretiva @auth](#diretiva-auth)
 		15. [Diretiva @guest](#diretiva-guest)
+	5. [Funções de ajuda](#funções-de-ajuda)
+		1. [Função route()](#route)
+		2. [Função asset()](#asset)
+		3. [Função auth()](#auth)
+		4. [Função old()](#old)
+		5. [Função request()](#request)
+		6. [Função session()](#session)
 
 
 
@@ -183,11 +190,11 @@ Route::get('/', function () {
 
 ### Métodos HTTP
 Os métodos HTTP são utilizados para indicar o tipo de ação que será realizada. Por exemplo, quando o usuário acessa uma página, o navegador envia uma requisição do tipo GET para o servidor. Quando o usuário envia um formulário, o navegador envia uma requisição do tipo POST para o servidor. O Laravel suporta os seguintes métodos HTTP:
-**GET**:	É o método utilizado para acessar uma página. Quando o usuário acessa uma página, o navegador envia uma requisição do tipo GET para o servidor.
-**POST**:	É o método utilizado para enviar dados para o servidor. Quando o usuário envia um formulário, o navegador envia uma requisição do tipo POST para o servidor.
-**PUT**:	É o método utilizado para atualizar dados no servidor.
-**PATCH**:	É o método utilizado para atualizar
-**DELETE**:	É o método utilizado para deletar dados no servidor.
+- **GET**:	É o método utilizado para acessar uma página. Quando o usuário acessa uma página, o navegador envia uma requisição do tipo GET para o servidor.
+- **POST**:	É o método utilizado para enviar dados para o servidor. Quando o usuário envia um formulário, o navegador envia uma requisição do tipo POST para o servidor.
+- **PUT**:	É o método utilizado para atualizar dados no servidor.
+- **PATCH**:	É o método utilizado para atualizar
+- **DELETE**:	É o método utilizado para deletar dados no servidor.
 
 
 A O método get() indica que a rota aceita apenas requisições do tipo GET. O método get() recebe dois parâmetros: o primeiro parâmetro é a URL e o segundo parâmetro é uma função anônima que retorna uma view. A função anônima é uma função sem nome. Nesse caso, a função anônima retorna a view welcome.blade.php.
@@ -592,3 +599,35 @@ A função `auth()` retorna uma instância da classe `AuthManager`. A classe `Au
 
 ```
 
+#### old( )
+
+A função `old()` retorna o valor de um campo de formulário que foi enviado anteriormente (enviou e deu errado). A função `old()` recebe como parâmetro o nome do campo. O código abaixo retorna o valor do campo `nome`:
+
+```php
+
+<input type="text" name="nome" value="{{ old('nome') }}">
+
+```
+
+#### request( )
+
+A função `request()` retorna uma instância da classe `Request`. A classe `Request` é responsável por gerenciar as requisições. A função `request()` é útil quando você precisa verificar qual é a rota atual. O código abaixo verifica se a rota atual é a rota `home`:
+
+```php
+
+@if(request()->routeIs('home'))
+	<p>Estou na página home.</p>
+@endif
+```
+#### session( )
+
+A função `session()` retorna uma instância da classe `SessionManager`. A classe `SessionManager` é responsável por gerenciar as sessões. 
+- Sessões são uma forma de armazenar informações sobre o usuário entre requisições.
+A função `session()` é útil quando você precisa verificar se existe uma mensagem de erro na sessão. O código abaixo verifica se existe uma mensagem de erro na sessão como resultado de uma validação de formulário:
+
+```php
+
+@if(session('error'))
+	<p>{{ session('error') }}</p>
+@endif
+```
