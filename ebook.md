@@ -302,7 +302,7 @@ Route::get('/bem-vindo', function () {
 Após certificarmos que a variável foi passada para a view, podemos exibir o valor da variável na view. Para exibir o valor da variável na view, utilize a sintaxe `{{ $nome_variavel }}`. O código abaixo exibe o valor da variável `nome` na view `welcome.blade.php`:
 
 ```php
-<h1>Olá, &lbrace;&lbrace{{ $nome }}&rbrace;&rbrace</h1>
+<h1>Olá, `{{ $nome }}`</h1>
 ```
 
 Outros exemplos:
