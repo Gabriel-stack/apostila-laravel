@@ -631,3 +631,394 @@ A função `session()` é útil quando você precisa verificar se existe uma men
 	<p>{{ session('error') }}</p>
 @endif
 ```
+
+## Controllers (controladores)
+
+O controller é responsável por receber uma requisição que vem da rota e retornar uma resposta. Até o momento, ao definir as rotas nós definimos uma função que retorna uma view, mas o ideal é que a lógica da aplicação fique em um controller e não em uma rota. Por exemplo, quando o usuário acessa a página principal do sistema, a rota é responsável por chamar o método de um controller que irá carregar a página principal do sistema. Quando o usuário acessa a página de login, a rota é responsável por chamar o método de um controller que irá carregar a página de login.
+
+### Criando um controller
+Para iniciarmos o uso do *controller* então, a primeira que coisa que devemos fazer é criar um controller. Para criar um controller, utilize o comando `php artisan make:controller NomeController`. O código abaixo cria um controller chamado `HomeController`:
+
+```bash
+
+php artisan make:controller HomeController
+```
+
+No escopo funcional de um sistema, cada parte do sistema vai ter ações comuns que podem ser chamadas de CRUD (Create, Read, Update, Delete). O Laravel já nos fornece um controller com essas ações comuns (métodos), o `php artisan make:controller --resource NomeController`. O código abaixo cria um controller chamado `HomeController` com as ações comuns:
+
+```bash
+
+php artisan make:controller --resource HomeController
+```
+
+Os códigos acima vão criar um arquivo de controlador na pasta `app/Http/Controllers`. O arquivo de controlador vai conter uma classe com o nome `HomeController`. A classe `HomeController` vai conter os métodos `index()`, `create()`, `store()`, `show()`, `edit()`, `update()`, `destroy()` caso você tenha usado a terminação `--resource` no comando. Caso contrário, a classe `HomeController` vai vir sem nenhum método.
+
+
+### Métodos de um controller
+
+Os métodos de um controller são definidos usando `public function` seguido do nome do método. Por exemplo, o código abaixo define o método `index()`:
+
+```php
+
+public function index()
+{
+	// código
+}
+```
+
+O código abaixo define o método `create()`:
+
+```php
+
+public function create()
+{
+	// código
+}
+```
+
+Após isso, o código da lógica da aplicação é inserido dentro do método. Por exemplo, o código abaixo define o método `index()` que retorna a view `welcome.blade.php`:
+
+```php
+
+public function index()
+{
+	return view('welcome');
+}
+```
+
+Então agora podemos montar um fluxo completo entre rota e controller. O código abaixo cria uma rota que chama o método `index()` do controller `HomeController`:
+
+```php
+
+Route::get('/', [HomeController::class, 'index']);
+```
+
+Perceba que o método `index()` do controller `HomeController` retorna a view `welcome.blade.php`. Então, quando o usuário acessa a URL http://localhost:8000, a rota é acessada e o método `index()` do controller `HomeController` é chamado. O método `index()` do controller `HomeController` retorna a view `welcome.blade.php`. A view `welcome.blade.php` é carregada e exibida para o usuário.
+
+Quanto a sintaxe de chamar o controller, isto é, a sintaxe `[HomeController::class, 'index']`, ela é a nossa antiga função usada para retornar a view, só que agora estamos chamando o controller e o método que queremos executar. A chamada é feita usando um [ e dentro a classe referente ao controlador e o método separados por vírgula.
+
+Veja outro exemplo:
+
+```php
+
+Route::get('/bem-vindo', [HomeController::class, 'BemVindo']);
+```
+
+```php
+
+public function BemVindo()
+{
+	return view('outro');
+}
+```
+
+Neste caso, quando o usuário acessa a URL http://localhost:8000/bem-vindo, a rota é acessada e o método `BemVindo()` do controller `HomeController` é chamado. O método `BemVindo()` do controller `HomeController` retorna a view `outro.blade.php`. A view `outro.blade.php` é carregada e exibida para o usuário.
+
+## Migrações (migrations)
+
+A migração é responsável por criar e alterar a estrutura do banco de dados. Por exemplo, se o sistema possui uma tabela chamada `pessoas`, a migração é responsável por criar a tabela `pessoas` já com os campos que você deseja. 
+
+Antes você precisava acessar o banco de dados e criar as tabelas manualmente. Com o Laravel, você pode criar as tabelas usando migrações. As migrações são arquivos PHP que contém instruções para criar e alterar a estrutura do banco de dados. As migrações são armazenadas no diretório `database/migrations`.
+
+### Criando uma migração
+
+Para criarmos uma migração, utilizamos o comando `php artisan make:migration NomeMigracao`. O ideal é já ter criado a migration junto com o modelo e o controlador, pois assim já criamos a migration com o nome da tabela que queremos. O código abaixo cria uma migração chamada `create_pessoas_table`:
+
+```bash
+	php artisan make:migration create_pessoas_table
+```
+
+### Métodos de uma migração
+
+Assim que criamos uma migração, ela já vem com alguns códigos. Como no exemplo abaixo:
+
+```php
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+
+class CreatePessoasTable extends Migration
+{
+	/**
+	 * Run the migrations.
+	 *
+	 * @return void
+	 */
+	public function up()
+	{
+		Schema::create('pessoas', function (Blueprint $table) {
+			$table->id();
+			$table->timestamps();
+		});
+	}
+
+	/**
+	 * Reverse the migrations.
+	 *
+	 * @return void
+	 */
+	public function down()
+	{
+		Schema::dropIfExists('pessoas');
+	}
+}
+
+```
+
+O código base da criação de uma tabela é esse. O método `up()` é responsável por criar a tabela e o método `down()` é responsável por deletar a tabela. A classe Schema é responsável por criar e alterar a estrutura do banco de dados. O método `create()` cria uma tabela.
+Veja que para definirmos o nome da nossa tabela no banco de dados, usamos o método `create()` e passamos como parâmetro o nome da tabela.
+
+### Adicionando colunas a uma tabela
+
+Na construção de um sistema, é normal que tenha várias tabelas, e essas tabelas possuam várias colunas para guardar os dados. Para 
+adicionar colunas para nossa migração, vamos dentro da função da Classe Schema, que é a função `create()`, e vamos adicionar as colunas que queremos. 
+
+#### Tipos de colunas e como criar
+
+##### ID
+
+O tipo de coluna ID é um tipo de coluna que é muito usado para identificar um registro. P Por exemplo, se temos uma tabela chamada `pessoas`, é comum que a tabela `pessoas` possua uma coluna chamada `id` que é responsável por identificar uma pessoa. Para criar uma coluna do tipo ID, utilize o método `id()`:
+
+```php
+	$table->id();
+```
+
+##### String
+
+O tipo de coluna String é um tipo de coluna que é muito usado para guardar textos. Por exemplo, se temos uma tabela chamada `pessoas`, é comum que a tabela `pessoas` possua uma coluna chamada `nome` que é responsável por guardar o nome de uma pessoa. Para criar uma coluna do tipo String, utilize o método `string()`:
+
+```php
+	$table->string('nome');
+```
+
+
+##### Integer
+
+O tipo de coluna Integer é um tipo de coluna que é muito usado para guardar números inteiros. Por exemplo, se temos uma tabela chamada `pessoas`, é comum que a tabela `pessoas` possua uma coluna chamada `idade` que é responsável por guardar a idade de uma pessoa. Para criar uma coluna do tipo Integer, utilize o método `integer()`:
+
+```php
+	$table->integer('idade');
+```
+
+##### Text
+
+O tipo de coluna Text é um tipo de coluna que é muito usado para guardar textos grandes. Por exemplo, se temos uma tabela chamada `pessoas`, é comum que a tabela `pessoas` possua uma coluna chamada `descricao` que é responsável por guardar a descrição de uma pessoa. Para criar uma coluna do tipo Text, utilize o método `text()`:
+
+```php
+	$table->text('descricao');
+```
+
+##### Boolean
+
+O tipo de coluna Boolean é um tipo de coluna que é muito usado para guardar valores booleanos. Por exemplo, se temos uma tabela chamada `pessoas`, é comum que a tabela `pessoas` possua uma coluna chamada `ativo` que é responsável por guardar se uma pessoa está ativa ou não. Para criar uma coluna do tipo Boolean, utilize o método `boolean()`:
+
+```php
+	$table->boolean('ativo');
+```
+
+##### Timestamps
+
+O tipo de coluna Timestamps é um tipo de coluna que é muito usado para guardar a data e hora de criação e atualização de um registro. Por exemplo, se temos uma tabela chamada `pessoas`, é comum que a tabela `pessoas` possua uma coluna chamada `created_at` que é responsável por guardar a data e hora de criação de uma pessoa e uma coluna chamada `updated_at` que é responsável por guardar a data e hora de atualização de uma pessoa. Para criar uma coluna do tipo Timestamps, utilize o método `timestamps()`:
+
+```php
+	$table->timestamps();
+```
+
+##### Datetime
+
+O tipo de coluna Datetime é um tipo de coluna que é muito usado para guardar a data e hora de um evento. Por exemplo, se temos uma tabela chamada `pessoas`, é comum que a tabela `pessoas` possua uma coluna chamada `data_nascimento` que é responsável por guardar a data e hora de nascimento de uma pessoa. Para criar uma coluna do tipo Datetime, utilize o método `datetime()`:
+
+```php
+	$table->datetime('data_nascimento');
+```
+
+
+##### Decimal
+
+
+O tipo de coluna Decimal é um tipo de coluna que é muito usado para guardar números decimais. Por exemplo, se temos uma tabela chamada `pessoas`, é comum que a tabela `pessoas` possua uma coluna chamada `altura` que é responsável por guardar a altura de uma pessoa. Para criar uma coluna do tipo Decimal, utilize o método `decimal()`:
+
+```php
+	$table->decimal('altura');
+```
+
+Ainda podemos passar como parâmetro a quantidade de casas decimais que queremos e a quantidade de casas antes da vírgula. Por exemplo, o código abaixo cria uma coluna chamada `altura` que é responsável por guardar a altura de uma pessoa. A coluna `altura` possui 2 casas decimais e 3 casas antes da vírgula:
+
+```php
+	$table->decimal('altura', 5, 2);
+```
+
+##### min, max e nullable
+
+Após criarmos uma coluna podemos definir o tamanho mínimo e máximo da coluna. Por exemplo, o código abaixo cria uma coluna chamada `nome` que é responsável por guardar o nome de uma pessoa. A coluna `nome` possui no mínimo 3 caracteres e no máximo 100 caracteres:
+
+```php
+	$table->string('nome')->min(3)->max(100);
+```
+
+Ou ainda podemos definir se a coluna pode ser nula ou não. Por exemplo, o código abaixo cria uma coluna chamada `nome` que é responsável por guardar o nome de uma pessoa. A coluna `nome` pode ser nula:
+
+```php
+	$table->string('nome')->nullable()->max(100);
+```
+
+##### unique
+
+Podemos definir se uma coluna deve ser única ou não. Por exemplo, o código abaixo cria uma coluna chamada `email` que é responsável por guardar o email de uma pessoa. A coluna `email` deve ser única:
+
+```php
+	$table->string('email')->unique();
+```
+
+##### default
+
+Podemos definir um valor padrão para uma coluna. Por exemplo, o código abaixo cria uma coluna chamada `ativo` que é responsável por guardar se uma pessoa está ativa ou não. A coluna `ativo` possui o valor padrão `true`:
+
+```php
+	$table->boolean('ativo')->default(true);
+```
+
+
+##### foreignId
+
+O conceito de banco de dados é muito importante na construção de sistemas. Como é de constume, um sistema sempre terá tabelas se relacionando entre si, isto é, um registro de uma tabela pode estar relacionado com um registro de outra tabela. Por exemplo, se temos uma tabela chamada `pessoas` e uma tabela chamada `cidades`, é comum que a tabela `pessoas` possua uma coluna chamada `cidade_id` que é responsável por guardar o id da cidade de uma pessoa. Para criar uma coluna do tipo foreignId, utilize o método `foreignId()`:
+
+```php
+	$table->foreignId('cidade_id');
+```
+
+##### constrained
+
+Após criarmos uma coluna do tipo foreignId, podemos definir a tabela e a coluna que a coluna do tipo foreignId está relacionada. Por exemplo, o código abaixo cria uma coluna chamada `cidade_id` que é responsável por guardar o id da cidade de uma pessoa. A coluna `cidade_id` está relacionada com a tabela `cidades` e com a coluna `id` da tabela `cidades`:
+
+```php
+	$table->foreignId('cidade_id')->constrained('cidades');
+```
+
+##### onDelete
+
+Após criarmos uma coluna do tipo foreignId, podemos definir o que acontece com os registros relacionados quando um registro é deletado. Por exemplo, o código abaixo cria uma coluna chamada `cidade_id` que é responsável por guardar o id da cidade de uma pessoa. A coluna `cidade_id` está relacionada com a tabela `cidades` e com a coluna `id` da tabela `cidades`. Quando um registro da tabela `cidades` é deletado, os registros relacionados da tabela `pessoas` são deletados:
+
+```php
+	$table->foreignId('cidade_id')->constrained('cidades')->onDelete('cascade');
+```
+
+##### onUpdate
+
+Após criarmos uma coluna do tipo foreignId, podemos definir o que acontece com os registros relacionados quando um registro é atualizado. Por exemplo, o código abaixo cria uma coluna chamada `cidade_id` que é responsável por guardar o id da cidade de uma pessoa. A coluna `cidade_id` está relacionada com a tabela `cidades` e com a coluna `id` da tabela `cidades`. Quando um registro da tabela `cidades` é atualizado, os registros relacionados da tabela `pessoas` são atualizados:
+
+```php
+	$table->foreignId('cidade_id')->constrained('cidades')->onUpdate('cascade');
+```
+
+
+
+### Executando uma migração
+
+Após criarmos uma migração, precisamos executar a migração para que a tabela seja criada no banco de dados. Para executarmos uma migração, utilizamos o comando `php artisan migrate`. O código abaixo executa a migração:
+
+```bash
+	php artisan migrate
+```
+
+Haverá casos que você precisa migrar os dados novamente após fazer modificações na migração. Então, para isso, você pode usar o comando `php artisan migrate:fresh`. O código abaixo executa a migração novamente e deleta a estrutura do banco de dados antiga:
+
+```bash
+	php artisan migrate:fresh
+```
+## Modelos (models)
+
+O modelo é responsável por representar uma tabela do banco de dados. Por exemplo, se o sistema possui uma tabela chamada `pessoas`, o modelo `Pessoa` é responsável por representar a tabela `pessoas` e realizar operações no banco de dados relacionadas a tabela `pessoas`. Por exemplo, o modelo `Pessoa` é responsável por inserir, atualizar, deletar e consultar dados da tabela `pessoas`.
+
+### Criando um modelo
+
+Para criarmos um modelo, utilizamos o comando `php artisan make:model NomeModelo`. O código abaixo cria um modelo chamado `Pessoa`:
+
+```bash
+
+php artisan make:model Pessoa
+```	
+
+Além disso, caso você queira agilizar o desenvolvimento, você pode criar o modelo e já criar a migração e com o controlador, tudo de uma vez só. Veja os três exemplos abaixo:
+
+```bash
+
+php artisan make:model Pessoa -m -c
+```
+Esse comando cria o modelo, a migração e o controlador.
+
+```bash
+
+php artisan make:model Pessoa -m
+```
+
+Esse comando cria o modelo e a migração.
+
+```bash
+
+php artisan make:model Pessoa -c
+```
+
+Esse comando cria o modelo e o controlador.
+
+### Métodos de um modelo
+
+Os modelos criados no laravel já possuem alguns métodos que facilitam a manipulação dos dados. Os métodos mais comuns são:
+- `all()`: retorna todos os registros da tabela.
+- `find($id)`: retorna o registro com o id passado como parâmetro.
+- `create($dados)`: cria um novo registro com os dados passados como parâmetro.
+- `update($dados)`: atualiza um registro com os dados passados como parâmetro.
+- `delete()`: deleta o registro.
+- `where($campo, operador ,$valor)`: retorna os registros que possuem o valor passado como parâmetro no campo passado como parâmetro.
+- `whereBetween($campo, [$valor1, $valor2])`: retorna os registros que possuem o valor passado como parâmetro no campo passado como parâmetro.
+- `whereNotBetween($campo, [$valor1, $valor2])`: retorna os registros que não possuem o valor passado como parâmetro no campo passado como parâmetro.
+- `whereNull($campo)`: retorna os registros que possuem o valor nulo no campo passado como parâmetro.
+- `whereNotNull($campo)`: retorna os registros que não possuem o valor nulo no campo passado como parâmetro.
+- `whereIn($campo, [$valor1, $valor2])`: retorna os registros que possuem o valor passado como parâmetro no campo passado como parâmetro.
+- `get()`: retorna os registros que possuem o valor passado como parâmetro no campo passado como parâmetro.
+- `first()`: retorna o primeiro registro que possui o valor passado como parâmetro no campo passado como parâmetro.
+- `paginate($quantidade)`: retorna os registros que possuem o valor passado como parâmetro no campo passado como parâmetro.
+- `orderBy(campo, ordem)`: retorna os dados com a ordenação passada como parâmetro.
+- `count()`: retorna a quantidade de registros.
+- `sum($campo)`: retorna a soma dos valores do campo passado como parâmetro.
+
+Esse são os métodos mais comuns, mas existem outros métodos que podem ser usados. Para saber mais sobre os métodos, acesse a [documentação](https://laravel.com/docs/8.x/eloquent#retrieving-models) do laravel.
+
+Vale ressaltar que alguns métodos podem ser usados de forma estática, ou seja, sem a necessidade de instanciar o modelo. Por exemplo, o método `all()` pode ser usado de forma estática. Já outros como update() e delete() precisam ser usados com uma instância do modelo. Veja os exemplos abaixo:
+
+```php
+
+// usando o método all() de forma estática
+
+Pessoa::all();
+
+// usando o método all() com uma instância do modelo
+
+$pessoa = new Pessoa();
+
+$pessoa->all();
+
+```
+
+Veja a tabela abaixo com exemplo de cada método acima:
+
+| Método | Exemplo |
+| ------ | ------ |
+| all() | Pessoa::all() |
+| find($id) | Pessoa::find(1) |
+| create($dados) | Pessoa::create(['nome' => 'João']) |
+| update($dados) | $pessoa = Pessoa::find(1); $pessoa->update(['nome' => 'João']) |
+| delete() | $pessoa = Pessoa::find(1); $pessoa->delete() |
+| where($campo, operador ,$valor) | Pessoa::where('nome', 'João')->get() |
+| whereBetween($campo, [$valor1, $valor2]) | Pessoa::whereBetween('idade', [18, 65])->get() |
+| whereNotBetween($campo, [$valor1, $valor2]) | Pessoa::whereNotBetween('idade', [18, 65])->get() |
+| whereNull($campo) | Pessoa::whereNull('nome')->get() |
+| whereNotNull($campo) | Pessoa::whereNotNull('nome')->get() |
+| whereIn($campo, [$valor1, $valor2]) | Pessoa::whereIn('nome', ['João', 'Maria'])->get() |
+| get() | Pessoa::where('nome', 'João')->get() |
+| first() | Pessoa::where('nome', 'João')->first() |
+| paginate($quantidade) | Pessoa::paginate(10) |
+| orderBy(campo, ordem) | Pessoa::orderBy('nome', 'asc')->get() |
+| count() | Pessoa::count() |
+| sum($campo) | Pessoa::sum('idade') |
+### Relacionamentos
