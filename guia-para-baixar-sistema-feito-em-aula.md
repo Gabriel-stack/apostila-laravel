@@ -21,7 +21,7 @@ git clone https://github.com/Gabriel-stack/blog-de-noticia-em-sala.git
 O código acima irá criar uma pasta chamada `blog-de-noticia-em-sala`. Abra esta pasta no vscode e abra o terminal do vscode. No terminal, digite o seguinte comando:
 
 ```bash
-composer install
+composer update
 ```
 
 ## 4. Crie o arquivo `.env`
