@@ -8,8 +8,6 @@ Um vez que as aulas são corridas, com pouco e existe muitos imprevistos. A apos
 
 #### Sumário
 
-# Table of contents
-
 - [Introdução](#introduo)
   - [O que é um framework?](#o-que--um-framework)
   - [O que é o Laravel?](#o-que--o-laravel)
