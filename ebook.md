@@ -1049,3 +1049,54 @@ Veja a tabela abaixo com exemplo de cada método acima:
 | count() | Pessoa::count() |
 | sum($campo) | Pessoa::sum('idade') |
 ### Relacionamentos
+Os relacionamentos são muito importantes na construção de um sistema. Como é de constume, um sistema sempre terá tabelas se relacionando entre si, isto é, um registro de uma tabela pode estar relacionado com um registro de outra tabela. Por exemplo, se temos uma tabela chamada `pessoas` e uma tabela chamada `perfil`, é comum que a tabela `pessoas` possua uma coluna chamada `perfil_id` que é responsável por guardar o id do perfil de uma pessoa. Nesse caso, a tabela `pessoas` está relacionada com a tabela `perfil`. O Laravel possui vários tipos de relacionamentos que podem ser usados para definir os relacionamentos entre as tabelas.
+
+#### Relacionamento um para um (One To One)
+
+O relacionamento um para um é usado quando um registro de uma tabela está relacionado com apenas um registro de outra tabela. Por exemplo, se temos uma tabela chamada `pessoas` e uma tabela chamada `perfil`, é comum que a tabela `pessoas` possua uma coluna chamada `perfil_id` que é responsável por guardar o id do perfil de uma pessoa. Nesse caso, a tabela `pessoas` está relacionada com a tabela `perfil`. O Laravel possui o método `hasOne()` que pode ser usado para definir o relacionamento um para um. O código abaixo define o relacionamento um para um entre a tabela `pessoas` e a tabela `perfil`:
+
+```php
+
+// no modelo Pessoa
+
+public function perfil()
+{
+  return $this->hasOne(Perfil::class);
+}
+```
+
+No model de perfil:
+```php
+
+// no modelo perfil
+
+public function pessoa()
+{
+  return $this->belongsTo(Pessoa::class);
+}
+```
+
+#### Relacionamento um para muitos (One To Many)
+
+O relacionamento um para muitos é usado quando um registro de uma tabela está relacionado com vários registros de outra tabela. Por exemplo, se temos uma tabela chamada `filmes` e uma tabela chamada `categorias`, é comum que a tabela `filmes` possua uma coluna chamada `categoria_id` que é responsável por guardar o id da categoria de um filme. Nesse caso, a tabela `filmes` está relacionada com a tabela `categorias`. O Laravel possui o método `hasMany()` que pode ser usado para definir o relacionamento um para muitos. O código abaixo define o relacionamento um para muitos entre a tabela `categorias` e a tabela `filmes`:
+
+```php
+
+// no modelo Categoria
+
+public function filmes()
+{
+  return $this->hasMany(Filme::class);
+}
+```
+
+No model de filme:
+```php
+
+// no modelo Filme
+
+public function categoria()
+{
+  return $this->belongsTo(Categoria::class);
+}
+```
